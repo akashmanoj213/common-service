@@ -1,15 +1,15 @@
-const {logger} = require("./logger")
+const {logger} = require("./logger");
 
 let traceId;
 
 setTraceId = (traceId) => {
-    logger.info("TraceId set - ", traceId);
-    traceId = traceId;
+    logger.info("Setting traceId: ", traceId);
+    this.traceId = traceId;
 }
 
 getTraceId = () => {
-    logger.info("Retrieving traceId - ", traceId);
-    return traceId;
+    logger.info("Retrieving traceId: ", this.traceId);
+    return this.traceId;
 }
 
 module.exports = {

@@ -1,34 +1,26 @@
+
 const express = require('express');
 const cors = require('cors');
-const paymentRoutes = require('./api/routes/payment');
-const {traceLogger} = require('./api/middlewares/traceLogger')
+const traceLogger = require('./api/middlewares/traceLogger');
+const errorHandler = require('./api/middlewares/errorHandler');
 
-async function setMiddleWare() {
-    const app = express();
+const app = express();
 
-    //Application Middlewares
-    app.use(traceLogger)
+//Application Middlewares
+app.use(traceLogger);
 
-    app.use(express.json());
-    app.use(cors());
-    app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
-    app.get('/', (req, res) => {
-        res.status(200).send('Api is working properly!');
-    });
+app.get('/', (req, res) => {
+    res.status(200).send('Api is working properly!');
+});
 
-    //Routes
-    app.use('/payment', paymentRoutes);
+//Routes
 
-    //Global Error handling
-    // app.use((err, req, res, next) => {
-    //     req.log.error({ err });
-    //     return res.status(500).json("Internal Server Error");
-    // });
 
-    return app;
-}
+//Global Error handling
+app.use(errorHandler);
 
-module.exports = {
-    setMiddleWare
-};
+module.exports = app;

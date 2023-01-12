@@ -1,8 +1,8 @@
 const { PubSub } = require('@google-cloud/pubsub');
 const { logger } = require('../../utils/logger');
-const { getTraceId, setTraceId } = require('../traceId');
+const { getTraceId } = require('../traceId');
 
-const publishMessage = async (data, topicName) => {
+const publishMessage = async (data, topicName, attributes = {}) => {
     try {
         const pubSubClient = new PubSub();
 
@@ -11,17 +11,14 @@ const publishMessage = async (data, topicName) => {
 
         const traceId = getTraceId();
 
-        // const messageId = await pubSubClient
-        //     .topic(topicName)
-        //     .publishMessage({ data: dataBuffer });
-
-        const attributes = {
+        attributes = {
+            ...attributes,
             traceId
         }
 
         const messageId = await pubSubClient
             .topic(topicName)
-            .publishMessage(dataBuffer, attributes)
+            .publish(dataBuffer, attributes);
 
         logger.info(`Message ${messageId} published.`);
         return messageId;
